@@ -206,16 +206,111 @@ function setTestimonialIndex(i) {
 function handleContactSubmit(e) {
   e.preventDefault();
   const form = document.getElementById('contact-form');
-  const name = form.querySelector('[name="name"]').value.trim();
-  const email = form.querySelector('[name="email"]').value.trim();
-  const phone = form.querySelector('[name="phone"]').value.trim();
-  const message = form.querySelector('[name="message"]').value.trim();
+  const nameInput = form.querySelector('[name="name"]');
+  const emailInput = form.querySelector('[name="email"]');
+  const phoneInput = form.querySelector('[name="phone"]');
+  const messageInput = form.querySelector('[name="message"]');
+  
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+  const message = messageInput.value.trim();
 
+  // Clear previous validation states
+  clearValidationErrors();
+
+  // Validate required fields
+  let hasError = false;
+
+  if (!name) {
+    showFieldError(nameInput, 'Please enter your name');
+    hasError = true;
+  } else if (name.length < 2) {
+    showFieldError(nameInput, 'Name must be at least 2 characters');
+    hasError = true;
+  }
+
+  if (!email) {
+    showFieldError(emailInput, 'Please enter your email address');
+    hasError = true;
+  } else if (!isValidEmail(email)) {
+    showFieldError(emailInput, 'Please enter a valid email address');
+    hasError = true;
+  }
+
+  // Phone is optional, but validate if provided
+  if (phone && !isValidPhoneNumber(phone)) {
+    showFieldError(phoneInput, 'Please enter a valid phone number');
+    hasError = true;
+  }
+
+  if (!message) {
+    showFieldError(messageInput, 'Please enter a message');
+    hasError = true;
+  } else if (message.length < 10) {
+    showFieldError(messageInput, 'Message must be at least 10 characters');
+    hasError = true;
+  }
+
+  if (hasError) {
+    return;
+  }
+
+  // Show success message
+  document.getElementById('contact-form').classList.add('hidden');
+  document.getElementById('contact-success').classList.remove('hidden');
+  document.getElementById('contact-success').classList.add('flex');
+
+  // Open mailto
   const subject = encodeURIComponent(`Website Inquiry from ${name}`);
   const body = encodeURIComponent(
     `Name: ${name}\nEmail: ${email}\n${phone ? 'Phone: ' + phone + '\n' : ''}\nMessage:\n${message}`
   );
   window.location.href = `mailto:hello@affairsofbeauty.com?subject=${subject}&body=${body}`;
+
+  // Reset form after 3 seconds
+  setTimeout(() => {
+    form.reset();
+    document.getElementById('contact-form').classList.remove('hidden');
+    document.getElementById('contact-success').classList.add('hidden');
+    document.getElementById('contact-success').classList.remove('flex');
+  }, 3000);
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function isValidPhoneNumber(phone) {
+  // Accept various formats: (123) 456-7890, 123-456-7890, 1234567890, +1 (123) 456-7890
+  const cleaned = phone.replace(/\D/g, '');
+  return cleaned.length >= 10 && cleaned.length <= 15;
+}
+
+function showFieldError(input, message) {
+  input.setAttribute('aria-invalid', 'true');
+  input.classList.add('border-red-500', 'bg-red-50');
+  
+  // Create or update error message
+  let errorDiv = input.parentElement.querySelector('.error-message');
+  if (!errorDiv) {
+    errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message text-red-600 text-sm mt-1';
+    errorDiv.setAttribute('role', 'alert');
+    input.parentElement.appendChild(errorDiv);
+  }
+  errorDiv.textContent = message;
+}
+
+function clearValidationErrors() {
+  document.querySelectorAll('[aria-invalid="true"]').forEach(input => {
+    input.removeAttribute('aria-invalid');
+    input.classList.remove('border-red-500', 'bg-red-50');
+  });
+  
+  document.querySelectorAll('.error-message').forEach(error => {
+    error.remove();
+  });
 }
 
 // ===== NEWSLETTER =====

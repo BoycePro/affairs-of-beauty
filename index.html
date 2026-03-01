@@ -111,6 +111,18 @@
     .backdrop-blur-md { backdrop-filter: blur(12px); }
     /* Hide scrollbar for lightbox */
     body.modal-open { overflow: hidden; }
+    /* Screen reader only - hide visually but keep for accessibility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-gray-100">
@@ -593,27 +605,65 @@
             <h4 class="text-xl font-semibold text-[#2D2D2D] mb-2">Message Sent!</h4>
             <p class="text-gray-600">Thank you for reaching out. We'll get back to you soon.</p>
           </div>
-          <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+          <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6" novalidate>
             <div>
-              <label class="block text-[#2D2D2D] font-medium mb-2">Full Name *</label>
-              <input type="text" name="name" required placeholder="Your name" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all" />
+              <label for="contact-name" class="block text-[#2D2D2D] font-medium mb-2">Full Name *</label>
+              <input 
+                type="text" 
+                id="contact-name"
+                name="name" 
+                required 
+                placeholder="Your name" 
+                aria-label="Full name"
+                aria-required="true"
+                class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all" 
+              />
             </div>
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-[#2D2D2D] font-medium mb-2">Email *</label>
-                <input type="email" name="email" required placeholder="your@email.com" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all" />
+                <label for="contact-email" class="block text-[#2D2D2D] font-medium mb-2">Email *</label>
+                <input 
+                  type="email" 
+                  id="contact-email"
+                  name="email" 
+                  required 
+                  placeholder="your@email.com" 
+                  aria-label="Email address"
+                  aria-required="true"
+                  aria-describedby="email-format-hint"
+                  class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all" 
+                />
+                <span id="email-format-hint" class="sr-only">Enter a valid email address like example@domain.com</span>
               </div>
               <div>
-                <label class="block text-[#2D2D2D] font-medium mb-2">Phone</label>
-                <input type="tel" name="phone" placeholder="(555) 123-4567" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all" />
+                <label for="contact-phone" class="block text-[#2D2D2D] font-medium mb-2">Phone</label>
+                <input 
+                  type="tel" 
+                  id="contact-phone"
+                  name="phone" 
+                  placeholder="(346) 257-1588" 
+                  aria-label="Phone number (optional)"
+                  aria-describedby="phone-format-hint"
+                  class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all" 
+                />
+                <span id="phone-format-hint" class="sr-only">Enter your phone number with area code</span>
               </div>
             </div>
             <div>
-              <label class="block text-[#2D2D2D] font-medium mb-2">Message *</label>
-              <textarea name="message" required rows="5" placeholder="How can we help you?" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all resize-none"></textarea>
+              <label for="contact-message" class="block text-[#2D2D2D] font-medium mb-2">Message *</label>
+              <textarea 
+                id="contact-message"
+                name="message" 
+                required 
+                rows="5" 
+                placeholder="How can we help you?" 
+                aria-label="Your message"
+                aria-required="true"
+                class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F2B5C8] focus:border-transparent outline-none transition-all resize-none"
+              ></textarea>
             </div>
-            <button type="submit" id="contact-submit-btn" class="w-full bg-[#2D2D2D] hover:bg-[#1A1A1A] text-white py-4 px-8 rounded-full font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-              <i data-lucide="mail" class="w-5 h-5"></i>
+            <button type="submit" id="contact-submit-btn" class="w-full bg-[#2D2D2D] hover:bg-[#1A1A1A] text-white py-4 px-8 rounded-full font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Send contact message via email">
+              <i data-lucide="mail" class="w-5 h-5" aria-hidden="true"></i>
               Send via Email
             </button>
           </form>

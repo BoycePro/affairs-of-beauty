@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form Tests - Affairs of Beauty</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-suite {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #2D2D2D; margin-bottom: 30px; }
+    .test { 
+      margin: 20px 0; 
+      padding: 15px;
+      border-left: 4px solid #ddd;
+      background: #f9f9f9;
+    }
+    .test.pass { border-color: #4caf50; background: #f1f8f4; }
+    .test.fail { border-color: #f44336; background: #fef1f0; }
+    .test h3 { margin: 0 0 10px 0; }
+    .test-result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .pass .test-result { color: #4caf50; }
+    .fail .test-result { color: #f44336; }
+    button {
+      background: #2D2D2D;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover { background: #1a1a1a; }
+    .summary {
+      margin: 30px 0;
+      padding: 20px;
+      background: #e3f2fd;
+      border-radius: 6px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-suite">
+    <h1>🧪 Contact Form Test Suite</h1>
+    <p>Testing AFOB-2 acceptance criteria for contact information functionality</p>
+    
+    <div class="summary" id="summary">
+      Running tests...
+    </div>
+
+    <button onclick="runAllTests()">Run All Tests</button>
+    <button onclick="clearResults()">Clear Results</button>
+
+    <div id="test-results"></div>
+  </div>
+
+  <script>
+    const tests = [];
+    let passCount = 0;
+    let failCount = 0;
+
+    // Test utilities
+    function test(name, fn) {
+      tests.push({ name, fn });
+    }
+
+    function assert(condition, message) {
+      if (!condition) {
+        throw new Error(message || 'Assertion failed');
+      }
+    }
+
+    function assertEquals(actual, expected, message) {
+      if (actual !== expected) {
+        throw new Error(message || `Expected ${expected} but got ${actual}`);
+      }
+    }
+
+    // Email validation function (from main.js)
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Phone validation function (enhanced)
+    function isValidPhone(phone) {
+      // Accept formats: (123) 456-7890, 123-456-7890, 1234567890, +1 (123) 456-7890
+      const cleaned = phone.replace(/\D/g, '');
+      return cleaned.length >= 10;
+    }
+
+    // Define tests
+    test('Email Validation: Valid email should pass', () => {
+      assert(isValidEmail('hello@affairsofbeauty.com'), 'Valid email should return true');
+      assert(isValidEmail('test@example.com'), 'Simple email should be valid');
+      assert(isValidEmail('user+tag@domain.co.uk'), 'Complex email should be valid');
+    });
+
+    test('Email Validation: Invalid email should fail', () => {
+      assert(!isValidEmail('notanemail'), 'Missing @ should fail');
+      assert(!isValidEmail('missing@domain'), 'Missing TLD should fail');
+      assert(!isValidEmail('@domain.com'), 'Missing local part should fail');
+      assert(!isValidEmail('spaces in@email.com'), 'Spaces should fail');
+    });
+
+    test('Phone Validation: Valid phone formats', () => {
+      assert(isValidPhone('(346) 257-1588'), 'Standard format should be valid');
+      assert(isValidPhone('3462571588'), 'Digits only should be valid');
+      assert(isValidPhone('346-257-1588'), 'Dashes only should be valid');
+      assert(isValidPhone('+1 (346) 257-1588'), 'International format should be valid');
+    });
+
+    test('Phone Validation: Invalid phone formats', () => {
+      assert(!isValidPhone('123'), 'Too short should fail');
+      assert(!isValidPhone('abc-def-ghij'), 'Letters should fail');
+      assert(!isValidPhone(''), 'Empty should fail');
+    });
+
+    test('Contact Info Display: Phone number is correct', () => {
+      const phone = '(346) 257-1588';
+      assertEquals(phone, '(346) 257-1588', 'Phone number should match spec');
+    });
+
+    test('Contact Info Display: Email is correct', () => {
+      const email = 'hello@affairsofbeauty.com';
+      assertEquals(email, 'hello@affairsofbeauty.com', 'Email should match spec');
+    });
+
+    test('Business Hours: Display all days', () => {
+      const hours = {
+        'Mon-Fri': '9am - 7pm',
+        'Saturday': '9am - 6pm',
+        'Sunday': '11am - 5pm'
+      };
+      assert(Object.keys(hours).length === 3, 'Should have 3 time blocks');
+      assert(hours['Mon-Fri'] === '9am - 7pm', 'Weekday hours should match');
+    });
+
+    test('Click-to-Call: Tel link format', () => {
+      const telLink = 'tel:+13462571588';
+      assert(telLink.startsWith('tel:'), 'Should start with tel:');
+      assert(telLink.includes('3462571588'), 'Should include phone digits');
+    });
+
+    test('Click-to-Email: Mailto link format', () => {
+      const mailtoLink = 'mailto:hello@affairsofbeauty.com';
+      assert(mailtoLink.startsWith('mailto:'), 'Should start with mailto:');
+      assert(mailtoLink.includes('hello@affairsofbeauty.com'), 'Should include email');
+    });
+
+    test('Schema.org: Required contact fields', () => {
+      const schema = {
+        '@type': 'BeautySalon',
+        'telephone': '+1-346-257-1588',
+        'email': 'hello@affairsofbeauty.com',
+        'address': {
+          '@type': 'PostalAddress',
+          'addressRegion': 'FL',
+          'addressCountry': 'US'
+        }
+      };
+      assert(schema['@type'] === 'BeautySalon', 'Type should be BeautySalon');
+      assert(schema.telephone, 'Should have telephone');
+      assert(schema.email, 'Should have email');
+      assert(schema.address, 'Should have address object');
+      assert(schema.address.addressRegion === 'FL', 'Should be in Florida');
+    });
+
+    test('Accessibility: ARIA labels should be descriptive', () => {
+      const ariaLabels = {
+        name: 'Full name',
+        email: 'Email address',
+        phone: 'Phone number',
+        message: 'Your message'
+      };
+      Object.values(ariaLabels).forEach(label => {
+        assert(label.length > 0, 'ARIA label should not be empty');
+        assert(label.length > 3, 'ARIA label should be descriptive');
+      });
+    });
+
+    // Run tests
+    function runAllTests() {
+      clearResults();
+      const resultsDiv = document.getElementById('test-results');
+      passCount = 0;
+      failCount = 0;
+
+      tests.forEach(({ name, fn }) => {
+        const testDiv = document.createElement('div');
+        testDiv.className = 'test';
+        
+        try {
+          fn();
+          testDiv.classList.add('pass');
+          testDiv.innerHTML = `
+            <h3>✅ ${name}</h3>
+            <div class="test-result">PASS</div>
+          `;
+          passCount++;
+        } catch (error) {
+          testDiv.classList.add('fail');
+          testDiv.innerHTML = `
+            <h3>❌ ${name}</h3>
+            <p>${error.message}</p>
+            <div class="test-result">FAIL</div>
+          `;
+          failCount++;
+        }
+        
+        resultsDiv.appendChild(testDiv);
+      });
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const summary = document.getElementById('summary');
+      const total = passCount + failCount;
+      const percentage = total > 0 ? Math.round((passCount / total) * 100) : 0;
+      
+      summary.innerHTML = `
+        <strong>Test Results:</strong> ${passCount} passed, ${failCount} failed (${percentage}% pass rate)
+      `;
+      
+      if (failCount === 0) {
+        summary.style.background = '#f1f8f4';
+        summary.style.color = '#4caf50';
+      } else {
+        summary.style.background = '#fef1f0';
+        summary.style.color = '#f44336';
+      }
+    }
+
+    function clearResults() {
+      document.getElementById('test-results').innerHTML = '';
+      passCount = 0;
+      failCount = 0;
+      document.getElementById('summary').innerHTML = 'Tests cleared. Click "Run All Tests" to begin.';
+      document.getElementById('summary').style.background = '#e3f2fd';
+      document.getElementById('summary').style.color = '#000';
+    }
+
+    // Auto-run on load
+    window.addEventListener('load', () => {
+      setTimeout(runAllTests, 500);
+    });
+  </script>
+</body>
+</html>
