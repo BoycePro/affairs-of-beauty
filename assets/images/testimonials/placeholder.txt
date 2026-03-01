@@ -1,0 +1,4 @@
+# Placeholder images for testimonials
+# These will be placeholder avatars - Janney can replace with real photos later
+
+We'll use initials-based SVG placeholders generated in the code.

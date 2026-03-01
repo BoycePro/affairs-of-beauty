@@ -143,15 +143,31 @@ function lightboxNext() {
 
 // ===== TESTIMONIALS =====
 const testimonials = [
-  { id: 1, name: 'Aisha Robinson', service: 'Wig Styling', rating: 5, text: 'Janet is absolutely amazing! My lace front looks so natural, people think it\'s my real hair. The attention to detail and care she puts into her work is unmatched. I\'ve been coming here for 3 years and will never go anywhere else!', date: 'January 2026' },
-  { id: 2, name: 'Destiny Williams', service: 'Knotless Braids', rating: 5, text: 'My knotless braids are PERFECT! No tension, no pain, and they look absolutely gorgeous. The salon atmosphere is so relaxing and everyone is so friendly. Highly recommend Affairs of Beauty!', date: 'January 2026' },
-  { id: 3, name: 'Nicole Carter', service: 'Nail Art', rating: 5, text: 'The nail artistry here is incredible! They brought my Pinterest vision to life and then some. The gel lasted over 3 weeks without chipping. The spa pedicure was so relaxing. This is my new go-to spot!', date: 'December 2025' },
-  { id: 4, name: 'Brianna Thomas', service: 'Hair Cut & Color', rating: 5, text: 'I was nervous about getting a big chop but the team made me feel so comfortable. My new cut frames my face perfectly and the color is exactly what I wanted. I feel like a new woman!', date: 'December 2025' },
-  { id: 5, name: 'Tiffany Moore', service: 'Bridal Styling', rating: 5, text: 'Affairs of Beauty did my hair and nails for my wedding and I felt like a queen! They were so professional and made sure everything was perfect. All my bridesmaids looked stunning too!', date: 'November 2025' },
-  { id: 6, name: 'Crystal Davis', service: 'Box Braids', rating: 5, text: 'Best braiding experience ever! Janet is fast, gentle, and her work is flawless. The braids lasted 8 weeks and still looked fresh. The online booking made everything so easy!', date: 'November 2025' }
+  { id: 1, name: 'Aisha Robinson', service: 'Wig Styling', rating: 5, text: 'Janet is absolutely amazing! My lace front looks so natural, people think it\'s my real hair. The attention to detail and care she puts into her work is unmatched. I\'ve been coming here for 3 years and will never go anywhere else!', date: 'January 2026', photo: 'AR' },
+  { id: 2, name: 'Destiny Williams', service: 'Knotless Braids', rating: 5, text: 'My knotless braids are PERFECT! No tension, no pain, and they look absolutely gorgeous. The salon atmosphere is so relaxing and everyone is so friendly. Highly recommend Affairs of Beauty!', date: 'January 2026', photo: 'DW' },
+  { id: 3, name: 'Nicole Carter', service: 'Nail Art', rating: 5, text: 'The nail artistry here is incredible! They brought my Pinterest vision to life and then some. The gel lasted over 3 weeks without chipping. The spa pedicure was so relaxing. This is my new go-to spot!', date: 'December 2025', photo: 'NC' },
+  { id: 4, name: 'Brianna Thomas', service: 'Hair Cut & Color', rating: 5, text: 'I was nervous about getting a big chop but the team made me feel so comfortable. My new cut frames my face perfectly and the color is exactly what I wanted. I feel like a new woman!', date: 'December 2025', photo: 'BT' },
+  { id: 5, name: 'Tiffany Moore', service: 'Bridal Styling', rating: 5, text: 'Affairs of Beauty did my hair and nails for my wedding and I felt like a queen! They were so professional and made sure everything was perfect. All my bridesmaids looked stunning too!', date: 'November 2025', photo: 'TM' },
+  { id: 6, name: 'Crystal Davis', service: 'Box Braids', rating: 5, text: 'Best braiding experience ever! Janet is fast, gentle, and her work is flawless. The braids lasted 8 weeks and still looked fresh. The online booking made everything so easy!', date: 'November 2025', photo: 'CD' },
+  { id: 7, name: 'Jasmine Lee', service: 'Wig Styling', rating: 5, text: 'I drove an hour to get here and it was worth every minute! The wig installation is seamless and looks incredibly natural. The salon is beautiful and the vibe is amazing. Can\'t wait for my next appointment!', date: 'October 2025', photo: 'JL' },
+  { id: 8, name: 'Morgan Blake', service: 'Goddess Locs', rating: 5, text: 'These goddess locs are everything! They took time but the result is stunning. I get compliments everywhere I go. Affairs of Beauty is the only place I trust with my hair now.', date: 'October 2025', photo: 'MB' }
 ];
 
 let testimonialIndex = 0;
+let testimonialAutoRotate = null;
+
+// Calculate average rating
+function getAverageRating() {
+  const sum = testimonials.reduce((acc, t) => acc + t.rating, 0);
+  return (sum / testimonials.length).toFixed(1);
+}
+
+// Generate placeholder avatar
+function generateAvatar(initials, colorIndex) {
+  const colors = ['#F2B5C8', '#D4AF37', '#8B4049', '#B8963A', '#E09DB5', '#F4C2C2'];
+  const bgColor = colors[colorIndex % colors.length];
+  return `<div class="w-16 h-16 rounded-full flex items-center justify-center font-bold text-white text-xl" style="background: linear-gradient(135deg, ${bgColor}, ${bgColor}dd);">${initials}</div>`;
+}
 
 function renderTestimonials() {
   const grid = document.getElementById('testimonials-grid');
@@ -163,18 +179,20 @@ function renderTestimonials() {
   grid.innerHTML = visible.map((t, i) => {
     const scaleClass = i === 1 ? 'md:scale-105 md:shadow-2xl' : 'md:opacity-80';
     const stars = Array(t.rating).fill('<svg class="w-5 h-5 fill-[#F2B5C8] text-[#F2B5C8]" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>').join('');
+    const avatar = generateAvatar(t.photo, t.id);
     return `
       <div class="bg-white rounded-3xl p-8 shadow-xl transform transition-all duration-500 ${scaleClass}">
-        <svg class="w-10 h-10 text-[#F4C2C2] mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
-        <div class="flex gap-1 mb-4">${stars}</div>
-        <p class="text-gray-700 leading-relaxed mb-6">"${t.text}"</p>
-        <div class="border-t border-gray-200 pt-4">
-          <h4 class="font-semibold text-[#2D2D2D]">${t.name}</h4>
-          <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4 mb-6">
+          ${avatar}
+          <div class="flex-1">
+            <h4 class="font-semibold text-[#2D2D2D] text-lg">${t.name}</h4>
             <span class="text-[#F2B5C8] text-sm">${t.service}</span>
-            <span class="text-gray-400 text-sm">${t.date}</span>
           </div>
         </div>
+        <div class="flex gap-1 mb-4">${stars}</div>
+        <svg class="w-8 h-8 text-[#F4C2C2] mb-3 opacity-50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+        <p class="text-gray-700 leading-relaxed mb-4">"${t.text}"</p>
+        <div class="text-gray-400 text-sm">${t.date}</div>
       </div>
     `;
   }).join('');
@@ -188,18 +206,40 @@ function renderTestimonials() {
 }
 
 function testimonialPrev() {
+  stopTestimonialAutoRotate();
   testimonialIndex = testimonialIndex === 0 ? testimonials.length - 1 : testimonialIndex - 1;
   renderTestimonials();
+  startTestimonialAutoRotate();
 }
 
 function testimonialNext() {
+  stopTestimonialAutoRotate();
   testimonialIndex = testimonialIndex === testimonials.length - 1 ? 0 : testimonialIndex + 1;
   renderTestimonials();
+  startTestimonialAutoRotate();
 }
 
 function setTestimonialIndex(i) {
+  stopTestimonialAutoRotate();
   testimonialIndex = i;
   renderTestimonials();
+  startTestimonialAutoRotate();
+}
+
+// Auto-rotate testimonials
+function startTestimonialAutoRotate() {
+  stopTestimonialAutoRotate();
+  testimonialAutoRotate = setInterval(() => {
+    testimonialIndex = (testimonialIndex + 1) % testimonials.length;
+    renderTestimonials();
+  }, 5000); // Rotate every 5 seconds
+}
+
+function stopTestimonialAutoRotate() {
+  if (testimonialAutoRotate) {
+    clearInterval(testimonialAutoRotate);
+    testimonialAutoRotate = null;
+  }
 }
 
 // ===== CONTACT FORM =====
@@ -573,6 +613,68 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+// ===== REVIEW SUBMISSION FORM =====
+function handleReviewSubmit(e) {
+  e.preventDefault();
+  const form = document.getElementById('review-form');
+  const name = form.querySelector('[name="review-name"]').value.trim();
+  const service = form.querySelector('[name="review-service"]').value.trim();
+  const rating = form.querySelector('input[name="review-rating"]:checked')?.value;
+  const review = form.querySelector('[name="review-text"]').value.trim();
+
+  if (!rating) {
+    alert('Please select a star rating');
+    return;
+  }
+
+  const subject = encodeURIComponent(`New Review from ${name}`);
+  const body = encodeURIComponent(
+    `New Review Submission\n\n` +
+    `Name: ${name}\n` +
+    `Service: ${service}\n` +
+    `Rating: ${rating} stars\n\n` +
+    `Review:\n${review}`
+  );
+  
+  // Open email client
+  window.location.href = `mailto:hello@affairsofbeauty.com?subject=${subject}&body=${body}`;
+  
+  // Show success message
+  document.getElementById('review-form-container').classList.add('hidden');
+  document.getElementById('review-success').classList.remove('hidden');
+  
+  // Reset form
+  form.reset();
+  
+  // Hide success message after 5 seconds and show form again
+  setTimeout(() => {
+    document.getElementById('review-success').classList.add('hidden');
+    document.getElementById('review-form-container').classList.remove('hidden');
+  }, 5000);
+}
+
+// Star rating interaction
+function setReviewRating(rating) {
+  document.querySelectorAll('input[name="review-rating"]').forEach((input, index) => {
+    input.checked = (index + 1) === rating;
+  });
+  updateStarDisplay(rating);
+}
+
+function updateStarDisplay(rating) {
+  document.querySelectorAll('.star-label').forEach((label, index) => {
+    const star = label.querySelector('svg');
+    if (index < rating) {
+      star.classList.add('fill-[#F2B5C8]', 'text-[#F2B5C8]');
+      star.classList.remove('fill-none', 'text-gray-300');
+    } else {
+      star.classList.remove('fill-[#F2B5C8]', 'text-[#F2B5C8]');
+      star.classList.add('fill-none', 'text-gray-300');
+    }
+  });
+}
+
 // ===== INITIALIZE =====
 renderGallery();
 renderTestimonials();
+startTestimonialAutoRotate();
