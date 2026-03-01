@@ -423,10 +423,15 @@
         <p class="text-gray-600 text-lg max-w-2xl mx-auto">Browse through our portfolio of stunning transformations and find inspiration for your next look.</p>
       </div>
       <div class="flex flex-wrap justify-center gap-3 mb-12" id="gallery-filters">
-        <button onclick="filterGallery('All')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-[#2D2D2D] text-white shadow-lg" data-category="All">All</button>
-        <button onclick="filterGallery('Wig Styling')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-white text-[#2D2D2D] hover:bg-[#F4C2C2]/30" data-category="Wig Styling">Wig Styling</button>
-        <button onclick="filterGallery('Braiding')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-white text-[#2D2D2D] hover:bg-[#F4C2C2]/30" data-category="Braiding">Braiding</button>
-        <button onclick="filterGallery('Hair Cuts')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-white text-[#2D2D2D] hover:bg-[#F4C2C2]/30" data-category="Hair Cuts">Hair Cuts</button>
+        <button onclick="filterGallery('All')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-[#2D2D2D] text-white shadow-lg transform hover:scale-105" data-category="All">
+          <span class="flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            All
+          </span>
+        </button>
+        <button onclick="filterGallery('Wigs')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-white text-[#2D2D2D] hover:bg-[#F4C2C2]/30 hover:scale-105" data-category="Wigs">Wigs</button>
+        <button onclick="filterGallery('Braids')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-white text-[#2D2D2D] hover:bg-[#F4C2C2]/30 hover:scale-105" data-category="Braids">Braids</button>
+        <button onclick="filterGallery('Cuts')" class="gallery-filter-btn px-6 py-2.5 rounded-full font-medium transition-all bg-white text-[#2D2D2D] hover:bg-[#F4C2C2]/30 hover:scale-105" data-category="Cuts">Cuts</button>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="gallery-grid">
         <!-- Gallery items rendered by JS -->
@@ -435,21 +440,81 @@
   </section>
 
   <!-- ========== LIGHTBOX MODAL ========== -->
-  <div id="lightbox" class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
-    <button onclick="event.stopPropagation(); closeLightbox();" class="absolute top-4 right-4 text-white hover:text-[#F2B5C8] transition-colors z-10">
-      <i data-lucide="x" class="w-8 h-8"></i>
+  <div id="lightbox" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 hidden" onclick="closeLightbox()">
+    <!-- Close Button -->
+    <button 
+      onclick="event.stopPropagation(); closeLightbox();" 
+      class="absolute top-4 right-4 text-white/80 hover:text-white bg-black/40 hover:bg-black/60 p-2 rounded-full transition-all z-10 backdrop-blur-sm"
+      aria-label="Close lightbox"
+    >
+      <i data-lucide="x" class="w-6 h-6"></i>
     </button>
-    <button onclick="event.stopPropagation(); lightboxPrev();" class="absolute left-4 text-white hover:text-[#F2B5C8] transition-colors z-10">
-      <i data-lucide="chevron-left" class="w-10 h-10"></i>
+    
+    <!-- Counter -->
+    <div class="absolute top-4 left-4 bg-black/40 backdrop-blur-sm px-4 py-2 rounded-full text-white text-sm font-medium z-10">
+      <span id="lightbox-counter">1 / 1</span>
+    </div>
+    
+    <!-- Previous Button -->
+    <button 
+      onclick="event.stopPropagation(); lightboxPrev();" 
+      class="absolute left-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-black/40 hover:bg-black/60 p-3 rounded-full transition-all z-10 backdrop-blur-sm hidden md:flex items-center justify-center"
+      aria-label="Previous image"
+    >
+      <i data-lucide="chevron-left" class="w-8 h-8"></i>
     </button>
-    <button onclick="event.stopPropagation(); lightboxNext();" class="absolute right-4 text-white hover:text-[#F2B5C8] transition-colors z-10">
-      <i data-lucide="chevron-right" class="w-10 h-10"></i>
+    
+    <!-- Next Button -->
+    <button 
+      onclick="event.stopPropagation(); lightboxNext();" 
+      class="absolute right-4 top-1/2 -translate-y-1/2 text-white/80 hover:text-white bg-black/40 hover:bg-black/60 p-3 rounded-full transition-all z-10 backdrop-blur-sm hidden md:flex items-center justify-center"
+      aria-label="Next image"
+    >
+      <i data-lucide="chevron-right" class="w-8 h-8"></i>
     </button>
-    <div class="max-w-4xl max-h-[80vh]" onclick="event.stopPropagation()">
-      <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[70vh] object-contain rounded-lg" />
-      <div class="text-center mt-4">
-        <span id="lightbox-category" class="text-[#F2B5C8] text-sm font-medium"></span>
-        <h3 id="lightbox-title" class="text-white font-semibold text-xl"></h3>
+    
+    <!-- Image Container -->
+    <div class="w-full max-w-5xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+      <div class="flex-1 flex items-center justify-center mb-4">
+        <img 
+          id="lightbox-img" 
+          src="" 
+          alt="" 
+          class="max-w-full max-h-[75vh] object-contain rounded-lg shadow-2xl" 
+        />
+      </div>
+      
+      <!-- Image Info -->
+      <div class="text-center bg-black/40 backdrop-blur-md rounded-2xl p-6 mx-auto max-w-2xl">
+        <div class="flex items-center justify-center gap-3 mb-2">
+          <span id="lightbox-category" class="text-[#F2B5C8] text-sm font-semibold uppercase tracking-wider"></span>
+          <span id="lightbox-before-after" class="hidden text-[#F2B5C8] text-xs bg-[#F2B5C8]/20 px-3 py-1 rounded-full">Before & After</span>
+        </div>
+        <h3 id="lightbox-title" class="text-white font-bold text-2xl mb-2"></h3>
+        <p id="lightbox-description" class="text-white/80 text-sm"></p>
+        
+        <!-- Mobile Navigation -->
+        <div class="flex gap-3 justify-center mt-4 md:hidden">
+          <button 
+            onclick="event.stopPropagation(); lightboxPrev();" 
+            class="flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all"
+          >
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            Previous
+          </button>
+          <button 
+            onclick="event.stopPropagation(); lightboxNext();" 
+            class="flex items-center gap-2 text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all"
+          >
+            Next
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+        </div>
+        
+        <!-- Keyboard Shortcuts Hint -->
+        <div class="hidden md:block mt-4 text-white/50 text-xs">
+          <span>Use arrow keys to navigate • ESC to close</span>
+        </div>
       </div>
     </div>
   </div>
@@ -912,6 +977,7 @@
   </div>
 
   <!-- ========== JAVASCRIPT ========== -->
+  <script src="assets/js/gallery.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
