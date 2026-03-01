@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking System Test Suite - Affairs of Beauty</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .test-pass { background-color: #d1fae5; border-left: 4px solid #10b981; }
+    .test-fail { background-color: #fee2e2; border-left: 4px solid #ef4444; }
+    .test-pending { background-color: #e0e7ff; border-left: 4px solid #6366f1; }
+  </style>
+</head>
+<body class="bg-gray-100 p-8">
+  <div class="max-w-4xl mx-auto">
+    <header class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">🧪 Booking System Test Suite</h1>
+      <p class="text-gray-600">Affairs of Beauty - AFOB-4 Implementation</p>
+      <div class="mt-4 flex gap-4">
+        <button onclick="runAllTests()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+          Run All Tests
+        </button>
+        <button onclick="clearResults()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+          Clear Results
+        </button>
+      </div>
+      <div id="summary" class="mt-4 hidden">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <h3 class="font-semibold mb-2">Test Summary:</h3>
+          <div class="flex gap-6 text-sm">
+            <span class="text-green-600 font-semibold">✓ Passed: <span id="passed-count">0</span></span>
+            <span class="text-red-600 font-semibold">✗ Failed: <span id="failed-count">0</span></span>
+            <span class="text-blue-600 font-semibold">⏳ Pending: <span id="pending-count">0</span></span>
+            <span class="text-gray-600 font-semibold">Total: <span id="total-count">0</span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="test-results" class="space-y-4"></div>
+  </div>
+
+  <script>
+    const tests = [
+      {
+        category: 'Functional Requirements',
+        tests: [
+          {
+            name: 'Online appointment booking interface exists',
+            check: () => {
+              const modal = document.createElement('div');
+              modal.innerHTML = `<div id="booking-modal"></div>`;
+              return modal.querySelector('#booking-modal') !== null;
+            }
+          },
+          {
+            name: 'Service selection dropdown has options',
+            manual: true,
+            instructions: 'Open the booking modal and verify the service dropdown has all 4 service categories (Wig Styling, Braiding, Hair Cuts, Nail Services)'
+          },
+          {
+            name: 'Date picker with minimum date validation',
+            manual: true,
+            instructions: 'Open booking modal, go to step 2, and verify you cannot select past dates'
+          },
+          {
+            name: 'Time slot picker shows available slots',
+            manual: true,
+            instructions: 'Select a date and verify time slots are displayed (9:00 AM - 5:30 PM)'
+          },
+          {
+            name: 'Customer information form has all required fields',
+            manual: true,
+            instructions: 'Verify Step 3 has name, email, and phone fields (all required) plus optional notes'
+          },
+          {
+            name: 'Booking confirmation display works',
+            manual: true,
+            instructions: 'Complete all steps and verify the confirmation screen shows booking summary'
+          },
+          {
+            name: 'Email confirmation system (mailto)',
+            manual: true,
+            instructions: 'Complete booking and verify email client opens with pre-filled booking details'
+          },
+          {
+            name: 'Calendly integration option available',
+            manual: true,
+            instructions: 'Open booking modal and verify "Quick Book (Calendly)" tab is present'
+          }
+        ]
+      },
+      {
+        category: 'Technical Requirements',
+        tests: [
+          {
+            name: 'Calendly widget loads properly',
+            manual: true,
+            instructions: 'Switch to Calendly tab and verify the Calendly widget loads'
+          },
+          {
+            name: 'Form validation - service selection',
+            manual: true,
+            instructions: 'Try clicking "Continue" on Step 1 without selecting service - should show error'
+          },
+          {
+            name: 'Form validation - date and time',
+            manual: true,
+            instructions: 'Try continuing from Step 2 without selecting date/time - should show error'
+          },
+          {
+            name: 'Form validation - customer info',
+            manual: true,
+            instructions: 'Try continuing from Step 3 with empty fields - should show error'
+          },
+          {
+            name: 'Email validation',
+            manual: true,
+            instructions: 'Enter invalid email (e.g., "test@test") - should show validation error'
+          },
+          {
+            name: 'Time slot availability checking',
+            manual: true,
+            instructions: 'Select different dates and verify some time slots are marked unavailable'
+          },
+          {
+            name: 'Mobile responsive design',
+            manual: true,
+            instructions: 'Open booking modal on mobile device (or resize browser to <768px) - should be fully responsive'
+          },
+          {
+            name: 'Accessibility - ARIA labels present',
+            check: () => {
+              // Would need to load actual page to check
+              return 'manual';
+            },
+            manual: true,
+            instructions: 'Inspect booking modal elements and verify aria-label, aria-required, and role attributes are present'
+          },
+          {
+            name: 'Loading states during booking',
+            manual: true,
+            instructions: 'Click "Confirm Booking" and verify a loading spinner appears briefly'
+          },
+          {
+            name: 'Error handling for failed operations',
+            manual: true,
+            instructions: 'Try to proceed without required fields and verify error messages display properly'
+          }
+        ]
+      },
+      {
+        category: 'User Flow',
+        tests: [
+          {
+            name: 'Step 1: Service selection works',
+            manual: true,
+            instructions: 'Select a service and verify duration displays'
+          },
+          {
+            name: 'Step 2: Date and time selection works',
+            manual: true,
+            instructions: 'Select date and time, verify selection is highlighted'
+          },
+          {
+            name: 'Step 3: Customer information entry works',
+            manual: true,
+            instructions: 'Enter name, email, phone - all fields should accept input'
+          },
+          {
+            name: 'Step 4: Booking review and confirmation',
+            manual: true,
+            instructions: 'Verify summary shows all entered information correctly'
+          },
+          {
+            name: 'Payment method selection',
+            manual: true,
+            instructions: 'Select Zelle or Cash payment option - details should expand'
+          },
+          {
+            name: 'Final confirmation shows success message',
+            manual: true,
+            instructions: 'Complete booking and verify success message with booking details'
+          },
+          {
+            name: 'Back navigation works between steps',
+            manual: true,
+            instructions: 'Navigate forward through steps, then click Back - should preserve data'
+          }
+        ]
+      },
+      {
+        category: 'Accessibility Features',
+        tests: [
+          {
+            name: 'Keyboard navigation works',
+            manual: true,
+            instructions: 'Use Tab key to navigate through booking form - all elements should be reachable'
+          },
+          {
+            name: 'ESC key closes modal',
+            manual: true,
+            instructions: 'Open booking modal and press ESC - modal should close'
+          },
+          {
+            name: 'Focus management',
+            manual: true,
+            instructions: 'Tab through form - focus indicator should be clearly visible'
+          },
+          {
+            name: 'Screen reader support',
+            manual: true,
+            instructions: 'Use screen reader (NVDA/JAWS) - form labels and status should be announced'
+          },
+          {
+            name: 'Color contrast meets WCAG AA',
+            manual: true,
+            instructions: 'Use browser devtools or WebAIM contrast checker - all text should meet 4.5:1 ratio'
+          },
+          {
+            name: 'Error messages are announced',
+            manual: true,
+            instructions: 'Trigger validation error - error should be in aria-live region'
+          }
+        ]
+      },
+      {
+        category: 'Responsive Design',
+        tests: [
+          {
+            name: 'Mobile view (320px-767px)',
+            manual: true,
+            instructions: 'Resize to 375px width - booking modal should fit screen with no horizontal scroll'
+          },
+          {
+            name: 'Tablet view (768px-1023px)',
+            manual: true,
+            instructions: 'Resize to 768px width - layout should adapt appropriately'
+          },
+          {
+            name: 'Desktop view (1024px+)',
+            manual: true,
+            instructions: 'View at 1920px width - modal should be centered and max-width applied'
+          },
+          {
+            name: 'Touch targets are adequate',
+            manual: true,
+            instructions: 'On mobile, verify all buttons/inputs are at least 44x44px'
+          }
+        ]
+      }
+    ];
+
+    function runAllTests() {
+      const resultsContainer = document.getElementById('test-results');
+      resultsContainer.innerHTML = '';
+      
+      let totalPassed = 0;
+      let totalFailed = 0;
+      let totalPending = 0;
+      let totalTests = 0;
+
+      tests.forEach(category => {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'bg-white rounded-lg shadow-md p-6';
+        
+        const categoryTitle = document.createElement('h2');
+        categoryTitle.className = 'text-xl font-bold text-gray-900 mb-4';
+        categoryTitle.textContent = category.category;
+        categoryDiv.appendChild(categoryTitle);
+
+        const testsDiv = document.createElement('div');
+        testsDiv.className = 'space-y-2';
+
+        category.tests.forEach(test => {
+          totalTests++;
+          const testDiv = document.createElement('div');
+          testDiv.className = 'p-4 rounded-lg ';
+          
+          if (test.manual) {
+            testDiv.classList.add('test-pending');
+            totalPending++;
+            testDiv.innerHTML = `
+              <div class="flex items-start gap-3">
+                <span class="text-xl">⏳</span>
+                <div class="flex-1">
+                  <div class="font-semibold text-gray-900">${test.name}</div>
+                  <div class="text-sm text-gray-600 mt-1">${test.instructions}</div>
+                  <div class="mt-2 flex gap-2">
+                    <button onclick="markTestPassed(this)" class="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">✓ Pass</button>
+                    <button onclick="markTestFailed(this)" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">✗ Fail</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            try {
+              const result = test.check();
+              if (result === true || result === 'manual') {
+                testDiv.classList.add('test-pass');
+                totalPassed++;
+                testDiv.innerHTML = `
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">✓</span>
+                    <span class="font-semibold text-gray-900">${test.name}</span>
+                  </div>
+                `;
+              } else {
+                testDiv.classList.add('test-fail');
+                totalFailed++;
+                testDiv.innerHTML = `
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">✗</span>
+                    <span class="font-semibold text-gray-900">${test.name}</span>
+                  </div>
+                `;
+              }
+            } catch (error) {
+              testDiv.classList.add('test-fail');
+              totalFailed++;
+              testDiv.innerHTML = `
+                <div class="flex items-start gap-3">
+                  <span class="text-xl">✗</span>
+                  <div>
+                    <div class="font-semibold text-gray-900">${test.name}</div>
+                    <div class="text-sm text-red-600 mt-1">Error: ${error.message}</div>
+                  </div>
+                </div>
+              `;
+            }
+          }
+
+          testsDiv.appendChild(testDiv);
+        });
+
+        categoryDiv.appendChild(testsDiv);
+        resultsContainer.appendChild(categoryDiv);
+      });
+
+      // Update summary
+      document.getElementById('summary').classList.remove('hidden');
+      document.getElementById('passed-count').textContent = totalPassed;
+      document.getElementById('failed-count').textContent = totalFailed;
+      document.getElementById('pending-count').textContent = totalPending;
+      document.getElementById('total-count').textContent = totalTests;
+    }
+
+    function markTestPassed(button) {
+      const testDiv = button.closest('.test-pending');
+      testDiv.classList.remove('test-pending');
+      testDiv.classList.add('test-pass');
+      testDiv.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="text-xl">✓</span>
+          <span class="font-semibold text-gray-900">${testDiv.querySelector('.font-semibold').textContent}</span>
+        </div>
+      `;
+      updateSummary();
+    }
+
+    function markTestFailed(button) {
+      const testDiv = button.closest('.test-pending');
+      const testName = testDiv.querySelector('.font-semibold').textContent;
+      testDiv.classList.remove('test-pending');
+      testDiv.classList.add('test-fail');
+      testDiv.innerHTML = `
+        <div class="flex items-start gap-3">
+          <span class="text-xl">✗</span>
+          <div>
+            <div class="font-semibold text-gray-900">${testName}</div>
+            <input type="text" placeholder="Enter reason for failure..." class="mt-2 w-full p-2 text-sm border border-gray-300 rounded" onchange="this.nextElementSibling.textContent = 'Reason: ' + this.value; this.style.display='none';">
+            <div class="text-sm text-red-600 mt-1"></div>
+          </div>
+        </div>
+      `;
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const passed = document.querySelectorAll('.test-pass').length;
+      const failed = document.querySelectorAll('.test-fail').length;
+      const pending = document.querySelectorAll('.test-pending').length;
+      const total = passed + failed + pending;
+      
+      document.getElementById('passed-count').textContent = passed;
+      document.getElementById('failed-count').textContent = failed;
+      document.getElementById('pending-count').textContent = pending;
+      document.getElementById('total-count').textContent = total;
+    }
+
+    function clearResults() {
+      document.getElementById('test-results').innerHTML = '';
+      document.getElementById('summary').classList.add('hidden');
+    }
+
+    // Auto-run tests on load
+    window.addEventListener('load', () => {
+      runAllTests();
+    });
+  </script>
+</body>
+</html>

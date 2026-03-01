@@ -230,12 +230,18 @@ function handleNewsletterSubmit(e) {
 // ===== BOOKING MODAL =====
 let bookingStep = 1;
 let selectedTime = '';
+let currentBookingTab = 'custom'; // 'custom' or 'calendly'
+let isBookingLoading = false;
 
 function openBookingModal(serviceName, price) {
   bookingStep = 1;
   selectedTime = '';
+  currentBookingTab = 'custom';
   document.getElementById('booking-modal').classList.remove('hidden');
   document.body.classList.add('modal-open');
+  
+  // Show custom booking by default
+  switchBookingTab('custom');
   
   // Reset form
   document.getElementById('booking-service').value = '';
@@ -276,13 +282,90 @@ function closeBookingModal() {
   document.body.classList.remove('modal-open');
 }
 
+// ===== BOOKING TAB SWITCHING =====
+function switchBookingTab(tab) {
+  currentBookingTab = tab;
+  
+  // Update tab buttons
+  const customTab = document.getElementById('tab-custom');
+  const calendlyTab = document.getElementById('tab-calendly');
+  const customContainer = document.getElementById('custom-booking-container');
+  const calendlyContainer = document.getElementById('calendly-container');
+  const bookingFooter = document.getElementById('booking-footer');
+  
+  if (tab === 'custom') {
+    // Style custom tab as active
+    customTab.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-semibold transition-all bg-[#F2B5C8] text-[#2D2D2D]';
+    customTab.setAttribute('aria-pressed', 'true');
+    calendlyTab.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-semibold transition-all bg-white/10 text-white hover:bg-white/20';
+    calendlyTab.setAttribute('aria-pressed', 'false');
+    
+    // Show custom booking, hide Calendly
+    customContainer.classList.remove('hidden');
+    calendlyContainer.classList.add('hidden');
+    bookingFooter.classList.remove('hidden');
+  } else {
+    // Style Calendly tab as active
+    calendlyTab.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-semibold transition-all bg-[#F2B5C8] text-[#2D2D2D]';
+    calendlyTab.setAttribute('aria-pressed', 'true');
+    customTab.className = 'flex-1 py-2.5 px-4 rounded-full text-sm font-semibold transition-all bg-white/10 text-white hover:bg-white/20';
+    customTab.setAttribute('aria-pressed', 'false');
+    
+    // Show Calendly, hide custom booking
+    customContainer.classList.add('hidden');
+    calendlyContainer.classList.remove('hidden');
+    bookingFooter.classList.add('hidden'); // Hide footer for Calendly
+  }
+}
+
 function renderTimeSlots() {
   const times = ['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','12:00 PM','12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM'];
   const grid = document.getElementById('time-slots-grid');
+  const selectedDate = document.getElementById('booking-date').value;
+  
+  // Check availability for each time slot
+  // In a real app, this would make an API call to check actual availability
+  // For now, we'll simulate some unavailable slots
+  const unavailableSlots = getUnavailableSlots(selectedDate);
+  
   grid.innerHTML = times.map(time => {
     const active = selectedTime === time;
-    return `<button type="button" onclick="selectTime('${time}')" class="p-2 rounded-lg text-sm font-medium transition-all ${active ? 'bg-[#2D2D2D] text-white' : 'bg-gray-50 text-[#2D2D2D] hover:bg-gray-100'}">${time}</button>`;
+    const available = !unavailableSlots.includes(time);
+    const disabledClass = !available ? 'opacity-50 cursor-not-allowed' : '';
+    const ariaDisabled = !available ? 'true' : 'false';
+    
+    return `<button 
+      type="button" 
+      onclick="${available ? `selectTime('${time}')` : 'return false;'}" 
+      class="p-2 rounded-lg text-sm font-medium transition-all ${active ? 'bg-[#2D2D2D] text-white' : available ? 'bg-gray-50 text-[#2D2D2D] hover:bg-gray-100' : 'bg-gray-200 text-gray-400'} ${disabledClass}"
+      aria-label="${time} ${available ? (active ? '(selected)' : '(available)') : '(unavailable)'}"
+      aria-disabled="${ariaDisabled}"
+      ${!available ? 'disabled' : ''}
+    >${time}${!available ? ' ✗' : ''}</button>`;
   }).join('');
+}
+
+// Simulate checking unavailable time slots
+// In production, this would call your booking API
+function getUnavailableSlots(date) {
+  if (!date) return [];
+  
+  // For demo purposes, mark some random slots as unavailable
+  // In production, replace with actual API call
+  const unavailable = [];
+  const dayOfWeek = new Date(date + 'T12:00:00').getDay();
+  
+  // Example: 12:00 PM and 1:00 PM are lunch breaks
+  unavailable.push('12:00 PM', '1:00 PM');
+  
+  // Example: Some random busy slots based on day of week
+  if (dayOfWeek === 1) { // Monday
+    unavailable.push('9:00 AM', '2:00 PM');
+  } else if (dayOfWeek === 5) { // Friday
+    unavailable.push('5:00 PM', '5:30 PM');
+  }
+  
+  return unavailable;
 }
 
 function selectTime(time) {
@@ -307,8 +390,12 @@ function updateBookingStep() {
   // Update step label
   document.getElementById('booking-step-label').textContent = `Step ${bookingStep} of 4`;
   
+  // Update progress bar
+  const progressBar = document.getElementById('booking-progress');
+  progressBar.setAttribute('aria-valuenow', bookingStep);
+  
   // Update progress
-  const bars = document.getElementById('booking-progress').children;
+  const bars = progressBar.children;
   for (let i = 0; i < bars.length; i++) {
     bars[i].className = `h-1 flex-1 rounded-full transition-colors ${i < bookingStep ? 'bg-[#F2B5C8]' : 'bg-white/30'}`;
   }
@@ -441,10 +528,19 @@ function selectPayment(method) {
 }
 
 function confirmBooking() {
+  if (isBookingLoading) return; // Prevent double-click
+  
   if (!selectedPayment) {
     showBookingError('Please select a payment method');
     return;
   }
+  
+  // Show loading state
+  isBookingLoading = true;
+  const payBtn = document.getElementById('booking-pay-btn');
+  const originalText = payBtn.innerHTML;
+  payBtn.innerHTML = '<span class="flex items-center gap-2"><svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Processing...</span>';
+  payBtn.disabled = true;
   const service = document.getElementById('booking-service').value;
   const name = document.getElementById('booking-name').value;
   const dateVal = document.getElementById('booking-date').value;
@@ -516,10 +612,16 @@ function confirmBooking() {
   // Store plain body for copy function
   window._bookingEmailText = plainBody.replace(/\\n/g, '\n');
   window._bookingEmailSubject = decodeURIComponent(emailSubject);
+  
+  // Reset loading state
+  isBookingLoading = false;
+  
   // Hide back/confirm, show close
   document.getElementById('booking-back-btn').classList.add('hidden');
-  document.getElementById('booking-pay-btn').innerHTML = '<span>Close</span>';
-  document.getElementById('booking-pay-btn').onclick = function() { closeBookingModal(); location.reload(); };
+  const payBtn = document.getElementById('booking-pay-btn');
+  payBtn.innerHTML = '<span>Close</span>';
+  payBtn.disabled = false;
+  payBtn.onclick = function() { closeBookingModal(); location.reload(); };
 }
 
 function copyBookingEmail() {
