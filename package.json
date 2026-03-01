@@ -1,0 +1,30 @@
+{
+  "name": "affairs-of-beauty",
+  "version": "1.0.0",
+  "description": "Affairs of Beauty - Premium Beauty Services Website",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:verbose": "jest --verbose"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "*.js",
+      "!node_modules/**",
+      "!coverage/**"
+    ],
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.5",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^23.0.1"
+  },
+  "author": "Affairs of Beauty",
+  "license": "MIT"
+}

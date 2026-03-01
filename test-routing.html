@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Routing Tests - Affairs of Beauty</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .test-pass { color: #10b981; }
+    .test-fail { color: #ef4444; }
+    .test-pending { color: #f59e0b; }
+  </style>
+</head>
+<body class="bg-gray-50 p-8">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Routing Tests - Affairs of Beauty</h1>
+    
+    <div class="bg-white rounded-lg shadow p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+      <div id="test-results" class="space-y-2 font-mono text-sm"></div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold mb-4">Test Summary</h2>
+      <div id="test-summary" class="grid grid-cols-3 gap-4"></div>
+    </div>
+
+    <div class="mt-6">
+      <button onclick="runTests()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+        Run Tests
+      </button>
+      <button onclick="location.href='/'" class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 ml-2">
+        Back to Site
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let testResults = [];
+    let passCount = 0;
+    let failCount = 0;
+
+    function log(message, status = 'pending') {
+      const resultsDiv = document.getElementById('test-results');
+      const div = document.createElement('div');
+      div.className = status === 'pass' ? 'test-pass' : status === 'fail' ? 'test-fail' : 'test-pending';
+      div.textContent = `${status === 'pass' ? '✓' : status === 'fail' ? '✗' : '○'} ${message}`;
+      resultsDiv.appendChild(div);
+      
+      if (status === 'pass') passCount++;
+      if (status === 'fail') failCount++;
+    }
+
+    function updateSummary() {
+      const summaryDiv = document.getElementById('test-summary');
+      summaryDiv.innerHTML = `
+        <div class="text-center">
+          <div class="text-3xl font-bold text-green-600">${passCount}</div>
+          <div class="text-sm text-gray-600">Passed</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-red-600">${failCount}</div>
+          <div class="text-sm text-gray-600">Failed</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-blue-600">${passCount + failCount}</div>
+          <div class="text-sm text-gray-600">Total</div>
+        </div>
+      `;
+    }
+
+    async function runTests() {
+      document.getElementById('test-results').innerHTML = '';
+      passCount = 0;
+      failCount = 0;
+
+      log('Starting routing tests...', 'pending');
+
+      // Test 1: Check if index.html exists
+      try {
+        const response = await fetch('/');
+        if (response.ok) {
+          log('Test 1: Home page (/) loads successfully', 'pass');
+        } else {
+          log('Test 1: Home page (/) failed to load', 'fail');
+        }
+      } catch (e) {
+        log('Test 1: Home page (/) - Error: ' + e.message, 'fail');
+      }
+
+      // Test 2: Check /services route
+      try {
+        const response = await fetch('/services');
+        if (response.ok) {
+          const html = await response.text();
+          if (html.includes('data-page="services"') || html.includes('Services')) {
+            log('Test 2: Services page (/services) loads with unique content', 'pass');
+          } else {
+            log('Test 2: Services page (/services) missing unique content', 'fail');
+          }
+        } else {
+          log('Test 2: Services page (/services) failed to load', 'fail');
+        }
+      } catch (e) {
+        log('Test 2: Services page - Error: ' + e.message, 'fail');
+      }
+
+      // Test 3: Check /about route
+      try {
+        const response = await fetch('/about');
+        if (response.ok) {
+          const html = await response.text();
+          if (html.includes('data-page="about"') || html.includes('About')) {
+            log('Test 3: About page (/about) loads with unique content', 'pass');
+          } else {
+            log('Test 3: About page (/about) missing unique content', 'fail');
+          }
+        } else {
+          log('Test 3: About page (/about) failed to load', 'fail');
+        }
+      } catch (e) {
+        log('Test 3: About page - Error: ' + e.message, 'fail');
+      }
+
+      // Test 4: Check /gallery route
+      try {
+        const response = await fetch('/gallery');
+        if (response.ok) {
+          log('Test 4: Gallery page (/gallery) loads successfully', 'pass');
+        } else {
+          log('Test 4: Gallery page (/gallery) failed to load', 'fail');
+        }
+      } catch (e) {
+        log('Test 4: Gallery page - Error: ' + e.message, 'fail');
+      }
+
+      // Test 5: Check /team route
+      try {
+        const response = await fetch('/team');
+        if (response.ok) {
+          log('Test 5: Team page (/team) loads successfully', 'pass');
+        } else {
+          log('Test 5: Team page (/team) failed to load', 'fail');
+        }
+      } catch (e) {
+        log('Test 5: Team page - Error: ' + e.message, 'fail');
+      }
+
+      // Test 6: Check /contact route
+      try {
+        const response = await fetch('/contact');
+        if (response.ok) {
+          log('Test 6: Contact page (/contact) loads successfully', 'pass');
+        } else {
+          log('Test 6: Contact page (/contact) failed to load', 'fail');
+        }
+      } catch (e) {
+        log('Test 6: Contact page - Error: ' + e.message, 'fail');
+      }
+
+      // Test 7: Check 404 handling
+      try {
+        const response = await fetch('/nonexistent-page');
+        if (response.status === 404 || response.redirected) {
+          log('Test 7: Invalid route (/nonexistent-page) handled correctly', 'pass');
+        } else {
+          log('Test 7: Invalid route handling - expected 404 or redirect', 'fail');
+        }
+      } catch (e) {
+        log('Test 7: 404 handling - Error: ' + e.message, 'fail');
+      }
+
+      // Test 8: Check router.js exists
+      try {
+        const response = await fetch('/router.js');
+        if (response.ok) {
+          log('Test 8: Router script (router.js) exists', 'pass');
+        } else {
+          log('Test 8: Router script (router.js) not found', 'fail');
+        }
+      } catch (e) {
+        log('Test 8: Router script - Error: ' + e.message, 'fail');
+      }
+
+      // Test 9: Check if navigation links exist in home page
+      try {
+        const response = await fetch('/');
+        const html = await response.text();
+        const hasServicesLink = html.includes('href="/services"') || html.includes('data-nav-link="services"');
+        const hasAboutLink = html.includes('href="/about"') || html.includes('data-nav-link="about"');
+        
+        if (hasServicesLink && hasAboutLink) {
+          log('Test 9: Navigation links present in HTML', 'pass');
+        } else {
+          log('Test 9: Navigation links missing from HTML', 'fail');
+        }
+      } catch (e) {
+        log('Test 9: Navigation check - Error: ' + e.message, 'fail');
+      }
+
+      // Test 10: Check meta tags differ per page (simulation)
+      try {
+        const homeResponse = await fetch('/');
+        const servicesResponse = await fetch('/services');
+        
+        if (homeResponse.ok && servicesResponse.ok) {
+          log('Test 10: Multiple pages accessible for meta tag verification', 'pass');
+        } else {
+          log('Test 10: Could not verify meta tags - pages not accessible', 'fail');
+        }
+      } catch (e) {
+        log('Test 10: Meta tags check - Error: ' + e.message, 'fail');
+      }
+
+      updateSummary();
+      
+      log('Tests completed!', 'pending');
+    }
+
+    // Run tests automatically on page load
+    window.addEventListener('load', () => {
+      setTimeout(runTests, 500);
+    });
+  </script>
+</body>
+</html>

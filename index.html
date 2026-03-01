@@ -111,6 +111,18 @@
     .backdrop-blur-md { backdrop-filter: blur(12px); }
     /* Hide scrollbar for lightbox */
     body.modal-open { overflow: hidden; }
+    /* Active route indicator */
+    [data-nav-link].active-route { color: #F2B5C8; position: relative; }
+    [data-nav-link].active-route::after { 
+      content: ''; 
+      position: absolute; 
+      bottom: -8px; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      width: 20px; 
+      height: 2px; 
+      background: #F2B5C8; 
+    }
   </style>
 </head>
 <body class="min-h-screen bg-gray-100">
@@ -120,15 +132,17 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-20">
         <div class="flex-shrink-0">
-          <h1 id="nav-logo" class="font-serif text-2xl md:text-3xl font-bold transition-colors text-white">Affairs of Beauty</h1>
+          <a href="/" data-nav-link="home">
+            <h1 id="nav-logo" class="font-serif text-2xl md:text-3xl font-bold transition-colors text-white">Affairs of Beauty</h1>
+          </a>
         </div>
         <div class="hidden lg:flex items-center space-x-6">
-          <button onclick="scrollToSection('services')" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Services</button>
-          <button onclick="scrollToSection('about')" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">About</button>
-          <button onclick="scrollToSection('gallery')" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Gallery</button>
-          <button onclick="scrollToSection('team')" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Team</button>
-          <button onclick="scrollToSection('testimonials')" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Testimonials</button>
-          <button onclick="scrollToSection('contact')" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Contact</button>
+          <a href="/services" data-nav-link="services" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Services</a>
+          <a href="/about" data-nav-link="about" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">About</a>
+          <a href="/gallery" data-nav-link="gallery" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Gallery</a>
+          <a href="/team" data-nav-link="team" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Team</a>
+          <a href="/" data-nav-link="home" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Testimonials</a>
+          <a href="/contact" data-nav-link="contact" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Contact</a>
           <a href="tel:+13462571588" class="flex items-center gap-2 text-sm font-medium transition-colors hover:text-[#F2B5C8] text-white">
             <i data-lucide="phone" class="w-4 h-4"></i>
             (346) 257-1588
@@ -144,12 +158,12 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="lg:hidden bg-gray-900/95 backdrop-blur-md border-t border-gray-700 hidden">
       <div class="px-4 py-6 space-y-4">
-        <button onclick="scrollToSection('services'); toggleMobileMenu();" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Services</button>
-        <button onclick="scrollToSection('about'); toggleMobileMenu();" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">About</button>
-        <button onclick="scrollToSection('gallery'); toggleMobileMenu();" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Gallery</button>
-        <button onclick="scrollToSection('team'); toggleMobileMenu();" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Team</button>
-        <button onclick="scrollToSection('testimonials'); toggleMobileMenu();" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Testimonials</button>
-        <button onclick="scrollToSection('contact'); toggleMobileMenu();" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Contact</button>
+        <a href="/services" data-nav-link="services" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Services</a>
+        <a href="/about" data-nav-link="about" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">About</a>
+        <a href="/gallery" data-nav-link="gallery" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Gallery</a>
+        <a href="/team" data-nav-link="team" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Team</a>
+        <a href="/" data-nav-link="home" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Testimonials</a>
+        <a href="/contact" data-nav-link="contact" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Contact</a>
         <a href="tel:+13462571588" class="flex items-center gap-2 text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">
           <i data-lucide="phone" class="w-5 h-5"></i>
           (346) 257-1588
@@ -160,7 +174,7 @@
   </nav>
 
   <!-- ========== HERO SECTION ========== -->
-  <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900">
+  <section data-page="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900">
     <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" style="background-image: url('assets/images/hero-background.png')">
       <div class="absolute inset-0 bg-gradient-to-r from-gray-900/85 via-gray-900/65 to-transparent"></div>
       <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 via-transparent to-gray-900/30"></div>
@@ -212,7 +226,7 @@
   </section>
 
   <!-- ========== SERVICES SECTION ========== -->
-  <section id="services" class="py-24 bg-gray-50">
+  <section id="services" data-page="services" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">What We Offer</span>
@@ -345,7 +359,7 @@
   </section>
 
   <!-- ========== ABOUT SECTION ========== -->
-  <section id="about" class="py-24 bg-gray-100">
+  <section id="about" data-page="about" class="py-24 bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
         <div>
@@ -415,7 +429,7 @@
   </section>
 
   <!-- ========== GALLERY SECTION ========== -->
-  <section id="gallery" class="py-24 bg-gray-100">
+  <section id="gallery" data-page="gallery" class="py-24 bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">Our Work</span>
@@ -455,7 +469,7 @@
   </div>
 
   <!-- ========== TEAM SECTION ========== -->
-  <section id="team" class="py-24 bg-gray-50">
+  <section id="team" data-page="team" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">Meet The Experts</span>
@@ -497,7 +511,7 @@
   </section>
 
   <!-- ========== TESTIMONIALS SECTION ========== -->
-  <section id="testimonials" class="py-24 bg-gradient-to-br from-[#2D2D2D] to-[#1A1A1A]">
+  <section id="testimonials" data-page="home" class="py-24 bg-gradient-to-br from-[#2D2D2D] to-[#1A1A1A]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">Client Love</span>
@@ -528,7 +542,7 @@
   </section>
 
   <!-- ========== CONTACT SECTION ========== -->
-  <section id="contact" class="py-24 bg-gray-50">
+  <section id="contact" data-page="contact" class="py-24 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">Get In Touch</span>
@@ -912,6 +926,7 @@
   </div>
 
   <!-- ========== JAVASCRIPT ========== -->
+  <script src="router.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
