@@ -11,37 +11,39 @@ Serves the Affairs of Beauty static site locally using Python's built-in HTTP se
 
 - **Root**: `/Users/bpj/Projects/affairs-of-beauty`
 - **Entry**: `index.html`
-- **Default port**: `8080`
+- **Default port**: `6699`
 
 ## Start the Server
 
 Run this from the project root:
 
 ```bash
-cd /Users/bpj/Projects/affairs-of-beauty && python3 -m http.server 8080
+cd /Users/bpj/Projects/affairs-of-beauty && python3 -m http.server 6699
 ```
 
-Then open **http://localhost:8080** in the browser.
+Then open **http://localhost:6699** in the browser.
 
 ## Usage Instructions
 
 When the user asks to start the dev server:
 
-1. Check if port 8080 is already in use:
+1. Check if port 6699 is already in use:
    ```bash
-   lsof -ti:8080
+   lsof -ti:6699
    ```
    If occupied, use port 8081 or 3000 instead.
 
-2. Start the server with bash (it will run in the foreground and print output):
+2. Open a new external Terminal window so the server runs in the background and does NOT block the pi agent terminal. Use `open` with AppleScript to launch a detached terminal:
    ```bash
-   cd /Users/bpj/Projects/affairs-of-beauty && python3 -m http.server 8080
+   osascript -e 'tell application "Terminal" to do script "cd /Users/bpj/Projects/affairs-of-beauty && python3 -m http.server 6699"'
    ```
+   This opens a new Terminal window, starts the server inside it, and returns immediately — keeping the pi agent terminal free.
 
 3. Tell the user:
-   - URL: **http://localhost:8080**
-   - To stop it: press **Ctrl+C** in that terminal
+   - URL: **http://localhost:6699**
+   - To stop it: close the Terminal window that opened, or press **Ctrl+C** inside it
    - The SPA router uses `history.pushState`, so deep links like `/services` won't work when navigating directly — always start from `/` and use the nav
+   - Alternatively they can use the VS Code task **"Start Dev Server"** (`Terminal → Run Task…`) which opens the server in a dedicated VS Code terminal panel
 
 ## Notes
 
