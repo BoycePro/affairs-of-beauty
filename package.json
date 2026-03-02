@@ -8,12 +8,14 @@
     "test:verbose": "jest --verbose"
   },
   "jest": {
-    "testEnvironment": "jsdom",
+    "testEnvironment": "node",
+    "setupFiles": ["./jest.setup.js"],
     "coverageDirectory": "coverage",
     "collectCoverageFrom": [
       "*.js",
       "!node_modules/**",
-      "!coverage/**"
+      "!coverage/**",
+      "!jest.setup.js"
     ],
     "testMatch": [
       "**/tests/**/*.test.js"

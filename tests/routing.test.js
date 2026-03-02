@@ -19,21 +19,16 @@ describe('Affairs of Beauty - Routing Tests', () => {
   beforeEach(() => {
     dom = new JSDOM(html, {
       url: 'http://localhost/',
-      runScripts: 'dangerously',
-      resources: 'usable'
+      runScripts: 'outside-only'
     });
     window = dom.window;
     document = window.document;
 
-    // Load router
-    const script = document.createElement('script');
-    script.textContent = router;
-    document.head.appendChild(script);
+    // Mock browser APIs not implemented by jsdom
+    window.scrollTo = () => {};
 
-    // Wait for router to initialize
-    return new Promise(resolve => {
-      window.addEventListener('load', resolve);
-    });
+    // Execute router in jsdom context
+    window.eval(router);
   });
 
   afterEach(() => {
@@ -49,6 +44,7 @@ describe('Affairs of Beauty - Routing Tests', () => {
       expect(Router.routes['/about']).toBe('about');
       expect(Router.routes['/gallery']).toBe('gallery');
       expect(Router.routes['/team']).toBe('team');
+      expect(Router.routes['/testimonials']).toBe('testimonials');
       expect(Router.routes['/contact']).toBe('contact');
     });
   });
@@ -56,7 +52,7 @@ describe('Affairs of Beauty - Routing Tests', () => {
   describe('Page Content', () => {
     test('each route should load unique content', (done) => {
       const Router = window.Router;
-      const routes = ['/', '/services', '/about', '/gallery', '/team', '/contact'];
+      const routes = ['/', '/services', '/about', '/gallery', '/team', '/testimonials', '/contact'];
       const contentSnapshots = {};
 
       routes.forEach((route, index) => {
@@ -86,7 +82,7 @@ describe('Affairs of Beauty - Routing Tests', () => {
       Router.navigate('/', false);
 
       const hero = document.querySelector('[data-page="hero"]');
-      const testimonials = document.querySelector('[data-page="home"]');
+      const testimonials = document.querySelector('[data-page="testimonials"]');
       
       expect(hero.style.display).not.toBe('none');
       expect(testimonials.style.display).not.toBe('none');
@@ -193,9 +189,7 @@ describe('Affairs of Beauty - Routing Tests', () => {
       const logo = document.querySelector('[data-nav-link="home"]');
       logo.click();
       
-      setTimeout(() => {
-        expect(window.location.pathname).toBe('/');
-      }, 100);
+      expect(window.location.pathname).toBe('/');
     });
   });
 
@@ -249,55 +243,44 @@ describe('Affairs of Beauty - Routing Tests', () => {
     test('should handle direct navigation to /services', () => {
       const newDom = new JSDOM(html, {
         url: 'http://localhost/services',
-        runScripts: 'dangerously'
+        runScripts: 'outside-only'
       });
+      newDom.window.scrollTo = () => {};
+      newDom.window.eval(router);
 
-      const script = newDom.window.document.createElement('script');
-      script.textContent = router;
-      newDom.window.document.head.appendChild(script);
-
-      setTimeout(() => {
-        const services = newDom.window.document.querySelector('[data-page="services"]');
-        expect(services.style.display).not.toBe('none');
-        newDom.window.close();
-      }, 200);
+      const services = newDom.window.document.querySelector('[data-page="services"]');
+      expect(services.style.display).not.toBe('none');
+      newDom.window.close();
     });
 
     test('should handle direct navigation to /about', () => {
       const newDom = new JSDOM(html, {
         url: 'http://localhost/about',
-        runScripts: 'dangerously'
+        runScripts: 'outside-only'
       });
+      newDom.window.scrollTo = () => {};
+      newDom.window.eval(router);
 
-      const script = newDom.window.document.createElement('script');
-      script.textContent = router;
-      newDom.window.document.head.appendChild(script);
-
-      setTimeout(() => {
-        const about = newDom.window.document.querySelector('[data-page="about"]');
-        expect(about.style.display).not.toBe('none');
-        newDom.window.close();
-      }, 200);
+      const about = newDom.window.document.querySelector('[data-page="about"]');
+      expect(about.style.display).not.toBe('none');
+      newDom.window.close();
     });
 
     test('should handle direct navigation to all routes', () => {
-      const routes = ['/services', '/about', '/gallery', '/team', '/contact'];
-      
+      const routes = ['/services', '/about', '/gallery', '/team', '/testimonials', '/contact'];
+
       routes.forEach(route => {
         const newDom = new JSDOM(html, {
           url: `http://localhost${route}`,
-          runScripts: 'dangerously'
+          runScripts: 'outside-only'
         });
+        newDom.window.scrollTo = () => {};
+        newDom.window.eval(router);
 
-        const script = newDom.window.document.createElement('script');
-        script.textContent = router;
-        newDom.window.document.head.appendChild(script);
-
-        setTimeout(() => {
-          const section = newDom.window.document.querySelector(`[data-page="${route.substring(1)}"]`);
-          expect(section).toBeDefined();
-          newDom.window.close();
-        }, 200);
+        const section = newDom.window.document.querySelector(`[data-page="${route.substring(1)}"]`);
+        expect(section).not.toBeNull();
+        expect(section.style.display).not.toBe('none');
+        newDom.window.close();
       });
     });
   });
@@ -348,7 +331,7 @@ describe('Affairs of Beauty - Routing Tests', () => {
 
     test('should update meta description for each page', () => {
       const Router = window.Router;
-      const routes = ['/', '/services', '/about', '/gallery', '/team', '/contact'];
+      const routes = ['/', '/services', '/about', '/gallery', '/team', '/testimonials', '/contact'];
       const descriptions = {};
 
       routes.forEach(route => {
