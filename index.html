@@ -137,11 +137,11 @@
           </a>
         </div>
         <div class="hidden lg:flex items-center space-x-6">
-          <a href="/services" data-nav-link="services" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Services</a>
           <a href="/about" data-nav-link="about" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">About</a>
+          <a href="/services" data-nav-link="services" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Services</a>
           <a href="/gallery" data-nav-link="gallery" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Gallery</a>
           <a href="/team" data-nav-link="team" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Team</a>
-          <a href="/" data-nav-link="home" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Testimonials</a>
+          <a href="/testimonials" data-nav-link="testimonials" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Testimonials</a>
           <a href="/contact" data-nav-link="contact" class="text-sm font-medium tracking-wide uppercase transition-colors hover:text-[#F2B5C8] text-white">Contact</a>
           <a href="tel:+13462571588" class="flex items-center gap-2 text-sm font-medium transition-colors hover:text-[#F2B5C8] text-white">
             <i data-lucide="phone" class="w-4 h-4"></i>
@@ -158,11 +158,11 @@
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="lg:hidden bg-gray-900/95 backdrop-blur-md border-t border-gray-700 hidden">
       <div class="px-4 py-6 space-y-4">
-        <a href="/services" data-nav-link="services" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Services</a>
         <a href="/about" data-nav-link="about" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">About</a>
+        <a href="/services" data-nav-link="services" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Services</a>
         <a href="/gallery" data-nav-link="gallery" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Gallery</a>
         <a href="/team" data-nav-link="team" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Team</a>
-        <a href="/" data-nav-link="home" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Testimonials</a>
+        <a href="/testimonials" data-nav-link="testimonials" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Testimonials</a>
         <a href="/contact" data-nav-link="contact" onclick="toggleMobileMenu()" class="block w-full text-left text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">Contact</a>
         <a href="tel:+13462571588" class="flex items-center gap-2 text-white text-lg font-medium py-2 hover:text-[#F2B5C8] transition-colors">
           <i data-lucide="phone" class="w-5 h-5"></i>
@@ -225,8 +225,78 @@
     </div>
   </section>
 
+  <!-- ========== ABOUT SECTION ========== -->
+  <section id="about" data-page="about" class="py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">Our Story</span>
+          <h2 class="font-serif text-4xl md:text-5xl text-[#2D2D2D] font-bold mt-4 mb-6">Where Beauty Meets Passion</h2>
+          <p class="text-gray-600 text-lg leading-relaxed mb-6">Founded in 2016, Affairs of Beauty was born from a passion for helping women feel confident and beautiful. What started as a small studio has grown into a premier destination for transformative beauty services.</p>
+          <p class="text-gray-600 text-lg leading-relaxed mb-8">Our mission is simple: to provide exceptional beauty services in a luxurious, welcoming environment. We believe that every woman deserves to feel like the best version of herself, and we're here to make that happen.</p>
+          <div class="grid sm:grid-cols-2 gap-6">
+            <div class="flex gap-4">
+              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="sparkles" class="w-6 h-6 text-[#2D2D2D]"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-[#2D2D2D] mb-1">Premium Products</h3>
+                <p class="text-gray-600 text-sm">We use only the highest quality, professional-grade products for all our services.</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="heart" class="w-6 h-6 text-[#2D2D2D]"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-[#2D2D2D] mb-1">Personalized Care</h3>
+                <p class="text-gray-600 text-sm">Every client receives a customized consultation to achieve their unique beauty goals.</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="award" class="w-6 h-6 text-[#2D2D2D]"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-[#2D2D2D] mb-1">Expert Stylists</h3>
+                <p class="text-gray-600 text-sm">Our team consists of certified professionals with years of industry experience.</p>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="users" class="w-6 h-6 text-[#2D2D2D]"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-[#2D2D2D] mb-1">Inclusive Space</h3>
+                <p class="text-gray-600 text-sm">A welcoming environment where everyone is celebrated and feels beautiful.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-4">
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+              <img src="assets/images/service-wigs.jpg" alt="Wig styling" class="w-full h-48 object-cover object-top" />
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+              <img src="assets/images/service-braids.jpg" alt="Braiding" class="w-full h-64 object-cover" />
+            </div>
+          </div>
+          <div class="space-y-4 pt-8">
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+              <img src="assets/images/service-haircuts.jpg" alt="Hair cutting" class="w-full h-64 object-cover object-top" />
+            </div>
+            <div class="rounded-2xl overflow-hidden shadow-lg">
+              <img src="assets/images/service-nails.jpg" alt="Nail services" class="w-full h-48 object-cover" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== SERVICES SECTION ========== -->
-  <section id="services" data-page="services" class="py-24 bg-gray-50">
+  <section id="services" data-page="services" class="py-24 bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">What We Offer</span>
@@ -358,76 +428,6 @@
     </div>
   </section>
 
-  <!-- ========== ABOUT SECTION ========== -->
-  <section id="about" data-page="about" class="py-24 bg-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-          <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">Our Story</span>
-          <h2 class="font-serif text-4xl md:text-5xl text-[#2D2D2D] font-bold mt-4 mb-6">Where Beauty Meets Passion</h2>
-          <p class="text-gray-600 text-lg leading-relaxed mb-6">Founded in 2016, Affairs of Beauty was born from a passion for helping women feel confident and beautiful. What started as a small studio has grown into a premier destination for transformative beauty services.</p>
-          <p class="text-gray-600 text-lg leading-relaxed mb-8">Our mission is simple: to provide exceptional beauty services in a luxurious, welcoming environment. We believe that every woman deserves to feel like the best version of herself, and we're here to make that happen.</p>
-          <div class="grid sm:grid-cols-2 gap-6">
-            <div class="flex gap-4">
-              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                <i data-lucide="sparkles" class="w-6 h-6 text-[#2D2D2D]"></i>
-              </div>
-              <div>
-                <h3 class="font-semibold text-[#2D2D2D] mb-1">Premium Products</h3>
-                <p class="text-gray-600 text-sm">We use only the highest quality, professional-grade products for all our services.</p>
-              </div>
-            </div>
-            <div class="flex gap-4">
-              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                <i data-lucide="heart" class="w-6 h-6 text-[#2D2D2D]"></i>
-              </div>
-              <div>
-                <h3 class="font-semibold text-[#2D2D2D] mb-1">Personalized Care</h3>
-                <p class="text-gray-600 text-sm">Every client receives a customized consultation to achieve their unique beauty goals.</p>
-              </div>
-            </div>
-            <div class="flex gap-4">
-              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                <i data-lucide="award" class="w-6 h-6 text-[#2D2D2D]"></i>
-              </div>
-              <div>
-                <h3 class="font-semibold text-[#2D2D2D] mb-1">Expert Stylists</h3>
-                <p class="text-gray-600 text-sm">Our team consists of certified professionals with years of industry experience.</p>
-              </div>
-            </div>
-            <div class="flex gap-4">
-              <div class="w-12 h-12 bg-[#F4C2C2]/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                <i data-lucide="users" class="w-6 h-6 text-[#2D2D2D]"></i>
-              </div>
-              <div>
-                <h3 class="font-semibold text-[#2D2D2D] mb-1">Inclusive Space</h3>
-                <p class="text-gray-600 text-sm">A welcoming environment where everyone is celebrated and feels beautiful.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div class="space-y-4">
-            <div class="rounded-2xl overflow-hidden shadow-lg">
-              <img src="assets/images/service-wigs.jpg" alt="Wig styling" class="w-full h-48 object-cover object-top" />
-            </div>
-            <div class="rounded-2xl overflow-hidden shadow-lg">
-              <img src="assets/images/service-braids.jpg" alt="Braiding" class="w-full h-64 object-cover" />
-            </div>
-          </div>
-          <div class="space-y-4 pt-8">
-            <div class="rounded-2xl overflow-hidden shadow-lg">
-              <img src="assets/images/service-haircuts.jpg" alt="Hair cutting" class="w-full h-64 object-cover object-top" />
-            </div>
-            <div class="rounded-2xl overflow-hidden shadow-lg">
-              <img src="assets/images/service-nails.jpg" alt="Nail services" class="w-full h-48 object-cover" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ========== GALLERY SECTION ========== -->
   <section id="gallery" data-page="gallery" class="py-24 bg-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -511,7 +511,7 @@
   </section>
 
   <!-- ========== TESTIMONIALS SECTION ========== -->
-  <section id="testimonials" data-page="home" class="py-24 bg-gradient-to-br from-[#2D2D2D] to-[#1A1A1A]">
+  <section id="testimonials" data-page="testimonials" class="py-24 bg-gradient-to-br from-[#2D2D2D] to-[#1A1A1A]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <span class="text-[#F2B5C8] font-medium tracking-widest uppercase text-sm">Client Love</span>

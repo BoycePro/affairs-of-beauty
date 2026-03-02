@@ -9,6 +9,7 @@
       '/about': 'about',
       '/gallery': 'gallery',
       '/team': 'team',
+      '/testimonials': 'testimonials',
       '/contact': 'contact'
     },
 
@@ -56,25 +57,26 @@
     },
 
     showSection(section) {
-      // Hide all sections
-      const sections = document.querySelectorAll('[data-page]');
-      sections.forEach(el => {
-        el.style.display = 'none';
-        el.setAttribute('aria-hidden', 'true');
-      });
+      const allSections = document.querySelectorAll('[data-page]');
 
-      // Show hero only on home
-      const hero = document.querySelector('[data-page="hero"]');
-      if (hero) {
-        hero.style.display = section === 'home' ? 'block' : 'none';
-        hero.setAttribute('aria-hidden', section === 'home' ? 'false' : 'true');
-      }
+      if (section === 'home') {
+        // Homepage: show every section for the full scrolling storytelling experience
+        allSections.forEach(el => {
+          el.style.display = 'block';
+          el.setAttribute('aria-hidden', 'false');
+        });
+      } else {
+        // Sub-page: hide everything, then show only the requested section (no hero)
+        allSections.forEach(el => {
+          el.style.display = 'none';
+          el.setAttribute('aria-hidden', 'true');
+        });
 
-      // Show the requested section
-      const targetSection = document.querySelector(`[data-page="${section}"]`);
-      if (targetSection) {
-        targetSection.style.display = 'block';
-        targetSection.setAttribute('aria-hidden', 'false');
+        const targetSection = document.querySelector(`[data-page="${section}"]`);
+        if (targetSection) {
+          targetSection.style.display = 'block';
+          targetSection.setAttribute('aria-hidden', 'false');
+        }
       }
 
       // Footer is always visible
@@ -119,6 +121,10 @@
           title: 'Our Team | Affairs of Beauty',
           description: 'Meet our passionate team of certified beauty professionals with years of expertise in wig styling, braiding, haircuts, and nail services.'
         },
+        testimonials: {
+          title: 'Client Testimonials | Affairs of Beauty',
+          description: 'See what our clients are saying about Affairs of Beauty. Real reviews from real clients who love our wig styling, braiding, haircuts, and nail services.'
+        },
         contact: {
           title: 'Contact Us | Affairs of Beauty',
           description: 'Get in touch with Affairs of Beauty. Book your appointment or send us a message. We\'re here to help you achieve your beauty goals.'
@@ -157,10 +163,15 @@
     },
 
     interceptLinks() {
-      // Legacy scroll function compatibility
+      // scrollToSection: scroll in-place on the homepage, navigate on sub-pages
       window.scrollToSection = (section) => {
-        const path = section === 'hero' ? '/' : `/${section}`;
-        this.navigate(path);
+        if (this.currentRoute === 'home') {
+          const el = document.getElementById(section);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          const path = section === 'hero' ? '/' : `/${section}`;
+          this.navigate(path);
+        }
       };
 
       // Add click handlers to nav links
