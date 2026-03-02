@@ -7,12 +7,12 @@ window.addEventListener('scroll', function() {
   const logo = document.getElementById('nav-logo');
   if (window.scrollY > 50) {
     navbar.classList.remove('bg-transparent');
-    navbar.classList.add('bg-gray-900/95', 'backdrop-blur-md', 'shadow-lg');
+    navbar.classList.add('bg-[#111111]/95', 'backdrop-blur-md', 'shadow-lg');
     logo.classList.remove('text-white');
     logo.classList.add('text-[#F2B5C8]');
   } else {
     navbar.classList.add('bg-transparent');
-    navbar.classList.remove('bg-gray-900/95', 'backdrop-blur-md', 'shadow-lg');
+    navbar.classList.remove('bg-[#111111]/95', 'backdrop-blur-md', 'shadow-lg');
     logo.classList.add('text-white');
     logo.classList.remove('text-[#F2B5C8]');
   }
