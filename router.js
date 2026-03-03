@@ -177,10 +177,12 @@
         }
       };
 
-      // Add click handlers to nav links
+      // Add click handlers to nav links.
+      // Skip links to standalone .html pages — those are full page navigations,
+      // not SPA routes, and must be handled by the browser directly.
       document.addEventListener('click', (e) => {
         const link = e.target.closest('a[href^="/"]');
-        if (link && link.hostname === window.location.hostname) {
+        if (link && link.hostname === window.location.hostname && !link.pathname.endsWith('.html')) {
           e.preventDefault();
           this.navigate(link.pathname);
         }
