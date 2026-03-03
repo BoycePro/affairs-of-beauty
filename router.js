@@ -156,12 +156,11 @@
         ogDesc.setAttribute('content', meta.description);
       }
 
-      // Update canonical URL
+      // Update canonical URL — always derive from origin to avoid accumulation
       const canonical = document.querySelector('link[rel="canonical"]');
       if (canonical) {
-        const baseUrl = canonical.getAttribute('href').replace(/\/$/, '');
         const path = Object.keys(this.routes).find(key => this.routes[key] === route);
-        canonical.setAttribute('href', baseUrl + path);
+        canonical.setAttribute('href', window.location.origin + path);
       }
     },
 

@@ -10,6 +10,7 @@ const path = require('path');
 // Load HTML file
 const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
 const router = fs.readFileSync(path.join(__dirname, '../router.js'), 'utf8');
+const main = fs.readFileSync(path.join(__dirname, '../assets/js/main.js'), 'utf8');
 
 describe('Affairs of Beauty - Routing Tests', () => {
   let dom;
@@ -412,6 +413,99 @@ describe('Affairs of Beauty - Routing Tests', () => {
         expect(window.scrollY).toBe(0);
       }, 100);
     });
+  });
+
+  describe('Canonical URL', () => {
+    test('should not accumulate path segments across multiple navigations', () => {
+      const Router = window.Router;
+      const canonical = document.querySelector('link[rel="canonical"]');
+
+      Router.navigate('/services', false);
+      expect(canonical.getAttribute('href')).toBe('http://localhost/services');
+
+      Router.navigate('/about', false);
+      expect(canonical.getAttribute('href')).toBe('http://localhost/about');
+
+      Router.navigate('/', false);
+      expect(canonical.getAttribute('href')).toBe('http://localhost/');
+
+      Router.navigate('/gallery', false);
+      expect(canonical.getAttribute('href')).toBe('http://localhost/gallery');
+    });
+
+    test('should produce a clean absolute URL for every route', () => {
+      const Router = window.Router;
+      const canonical = document.querySelector('link[rel="canonical"]');
+      const routes = ['/', '/services', '/about', '/gallery', '/team', '/testimonials', '/contact'];
+
+      routes.forEach(routePath => {
+        Router.navigate(routePath, false);
+        expect(canonical.getAttribute('href')).toBe(`http://localhost${routePath}`);
+      });
+    });
+  });
+});
+
+describe('Mobile Menu', () => {
+  let dom;
+  let window;
+  let document;
+
+  beforeEach(() => {
+    dom = new JSDOM(html, {
+      url: 'http://localhost/',
+      runScripts: 'outside-only'
+    });
+    window = dom.window;
+    document = dom.window.document;
+
+    window.scrollTo = () => {};
+    // Mock lucide so main.js can load without the CDN
+    window.lucide = { createIcons: () => {} };
+
+    window.eval(router);
+    window.eval(main);
+  });
+
+  afterEach(() => {
+    dom.window.close();
+  });
+
+  test('mobile menu should be closed by default', () => {
+    const menu = document.getElementById('mobile-menu');
+    expect(menu.classList.contains('hidden')).toBe(true);
+  });
+
+  test('should open and close via toggleMobileMenu', () => {
+    window.toggleMobileMenu();
+    expect(document.getElementById('mobile-menu').classList.contains('hidden')).toBe(false);
+
+    window.toggleMobileMenu();
+    expect(document.getElementById('mobile-menu').classList.contains('hidden')).toBe(true);
+  });
+
+  test('should close mobile menu on route change', () => {
+    // Open the menu
+    window.toggleMobileMenu();
+    expect(document.getElementById('mobile-menu').classList.contains('hidden')).toBe(false);
+
+    // Navigate — dispatches routechange which should trigger closeMobileMenu
+    window.Router.navigate('/services', false);
+
+    expect(document.getElementById('mobile-menu').classList.contains('hidden')).toBe(true);
+  });
+
+  test('should reset hamburger icon state when closed via routechange', () => {
+    window.toggleMobileMenu();
+    // Close icon should be visible, menu icon hidden
+    expect(document.getElementById('close-icon').classList.contains('hidden')).toBe(false);
+    expect(document.getElementById('menu-icon').classList.contains('hidden')).toBe(true);
+
+    window.Router.navigate('/about', false);
+
+    // Should be back to default: menu icon visible, close icon hidden
+    expect(document.getElementById('close-icon').classList.contains('hidden')).toBe(true);
+    expect(document.getElementById('menu-icon').classList.contains('hidden')).toBe(false);
   });
 });
 

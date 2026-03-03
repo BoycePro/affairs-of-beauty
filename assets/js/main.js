@@ -27,11 +27,6 @@ window.addEventListener('scroll', updateNavbar);
 // Re-evaluate navbar after each client-side navigation
 window.addEventListener('routechange', updateNavbar);
 
-function scrollToSection(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-}
-
 // ===== MOBILE MENU =====
 let mobileMenuOpen = false;
 function toggleMobileMenu() {
@@ -40,6 +35,14 @@ function toggleMobileMenu() {
   document.getElementById('menu-icon').classList.toggle('hidden', mobileMenuOpen);
   document.getElementById('close-icon').classList.toggle('hidden', !mobileMenuOpen);
 }
+function closeMobileMenu() {
+  mobileMenuOpen = false;
+  document.getElementById('mobile-menu').classList.add('hidden');
+  document.getElementById('menu-icon').classList.remove('hidden');
+  document.getElementById('close-icon').classList.add('hidden');
+}
+// Reset mobile menu on every route change (e.g. browser back/forward)
+window.addEventListener('routechange', closeMobileMenu);
 
 // ===== GALLERY =====
 const galleryImages = [
@@ -618,7 +621,7 @@ function confirmBooking() {
   `;
 
   // Store plain body for copy function
-  window._bookingEmailText = plainBody.replace(/\\n/g, '\n');
+  window._bookingEmailText = plainBody;
   window._bookingEmailSubject = decodeURIComponent(emailSubject);
   // Hide back/confirm, show close
   document.getElementById('booking-back-btn').classList.add('hidden');
@@ -680,3 +683,6 @@ document.addEventListener('keydown', function(e) {
 // ===== INITIALIZE =====
 renderGallery();
 renderTestimonials();
+// Sync navbar state on load — the initial routechange fires before this
+// listener is registered, so we call it once explicitly here.
+updateNavbar();
