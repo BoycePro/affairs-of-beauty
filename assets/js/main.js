@@ -2,10 +2,15 @@
 lucide.createIcons();
 
 // ===== NAVBAR SCROLL =====
-window.addEventListener('scroll', function() {
+function updateNavbar() {
   const navbar = document.getElementById('navbar');
   const logo = document.getElementById('nav-logo');
-  if (window.scrollY > 50) {
+  // On sub-pages the hero isn't visible, so always keep the navbar solid.
+  // On the homepage, go transparent until the user scrolls past 50px.
+  const isHome = window.Router && window.Router.currentRoute === 'home';
+  const shouldBeSolid = window.scrollY > 50 || !isHome;
+
+  if (shouldBeSolid) {
     navbar.classList.remove('bg-transparent');
     navbar.classList.add('bg-[#111111]/95', 'backdrop-blur-md', 'shadow-lg');
     logo.classList.remove('text-white');
@@ -16,7 +21,11 @@ window.addEventListener('scroll', function() {
     logo.classList.add('text-white');
     logo.classList.remove('text-[#F2B5C8]');
   }
-});
+}
+
+window.addEventListener('scroll', updateNavbar);
+// Re-evaluate navbar after each client-side navigation
+window.addEventListener('routechange', updateNavbar);
 
 function scrollToSection(id) {
   const el = document.getElementById(id);

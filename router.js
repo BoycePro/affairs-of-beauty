@@ -42,9 +42,12 @@
       this.showSection(route);
       this.updateNav();
       this.updateMetaTags(route);
-      
+
       // Scroll to top
       window.scrollTo(0, 0);
+
+      // Notify other modules (e.g. navbar) that the route changed
+      window.dispatchEvent(new CustomEvent('routechange', { detail: { route } }));
     },
 
     navigate(path, pushState = true) {
